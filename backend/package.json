@@ -12,6 +12,7 @@
   "dependencies": {
     "consign": "^0.1.6",
     "express": "^4.17.1",
+    "express-fileupload": "^1.1.7-alpha.3",
     "mongodb": "^3.5.5"
   }
 }

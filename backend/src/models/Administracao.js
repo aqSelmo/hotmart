@@ -19,14 +19,14 @@ module.exports.saveUser = async (application, opts) => {
     return data;
 }
 
-module.exports.update = async (application, opts) => {
+module.exports.updateUser = async (application, opts) => {
     const Mongo = new application.src.config.db.index;
     const data = await Mongo.update('administration', opts);
 
     return data;
 }
 
-module.exports.remove = async (application, opts) => {
+module.exports.removeUser = async (application, opts) => {
     const Mongo = new application.src.config.db.index;
     const data = await Mongo.deleteOne('administration', opts);
 

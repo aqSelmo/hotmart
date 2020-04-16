@@ -1,34 +1,10 @@
 const assert = require('assert');
 const crypto = require('crypto');
-const path = require('path');
-const fs = require('fs');
 
-module.exports.getBanner = async (application, request, response) => {
+module.exports.getText = async (application, request, response) => {
     try {
         assert(request.headers.authorization);
-        const data = await application.src.models.Banners.getBanner(application, request.params);
-
-        return response.json({
-            "status" : "200",
-            "result" : {
-                "data" : data
-            },
-            "err" : {}
-        })
-    } catch (err) {
-        return response.status(401).json({
-            "status" : "401",
-            "err" : {
-                "msg" : "Unauthorized"
-            }
-        })
-    }
-}
-
-module.exports.getBanners = async (application, request, response) => {
-    try {
-        assert(request.headers.authorization);
-        const data = await application.src.models.Banners.getBanners(application, {});
+        const data = await application.src.models.Textos.getText(application, request.params);
 
         return response.json({
             "status" : "200",
@@ -48,20 +24,39 @@ module.exports.getBanners = async (application, request, response) => {
     
 }
 
-module.exports.saveBanner = async (application, request, response) => {
+module.exports.getTexts = async (application, request, response) => {
+    try {
+        assert(request.headers.authorization);
+        const data = await application.src.models.Textos.getTexts(application, {});
+
+        return response.json({
+            "status" : "200",
+            "result" : {
+                "data" : data
+            },
+            "err" : {}
+        })
+    } catch (err) {
+        return response.status(401).json({
+            "status" : "401",
+            "err" : {
+                "msg" : "Unauthorized"
+            }
+        })
+    }
+    
+}
+
+module.exports.saveText = async (application, request, response) => {
     const Data = new Date;
     try {
         assert(request.headers.authorization);
 
-        const file = request.files.file;
-        const fileName = crypto.createHash('md5').update(file.name).digest('hex') + path.extname(file.name);
-
-        file.mv(`./../public/uploads/${fileName}`, err => {});
-
-        const data = await application.src.models.Banners.saveBanner(application, {
-            "filename": file.name,
-            "src" : fileName,
-            "size" : file.size,
+        const data = await application.src.models.Textos.saveText(application, {
+            "title": request.body.title,
+            "subtitle" : request.body.subtitle,
+            "author" : request.body.author,
+            "text" : request.body.text,
             "timestamp" : Data.toTimeString()
         });
 
@@ -84,16 +79,39 @@ module.exports.saveBanner = async (application, request, response) => {
     
 }
 
-module.exports.removeBanner = async (application, request, response) => {
+module.exports.updateText = async (application, request, response) => {
     try {
         assert(request.headers.authorization);
 
-        const data = await application.src.models.Banners.getBanner(application, request.params);
-        
-        if(data.src) {
-            fs.unlink(`./../public/uploads/${data.src}`, err => {});
-            await application.src.models.Banners.removeBanner(application, request.params);
-        }
+        const data = await application.src.models.Textos.updateText(application, {
+            _id : request.body._id,
+            fields : request.body.fields
+        });
+
+        return response.json({
+            "status" : "200",
+            "result" : {
+                "data" : data.value,
+                "updatedId" : request.body._id
+            },
+            "err" : {}
+        })
+    } catch (err) {
+        return response.status(401).json({
+            "status" : "401",
+            "err" : {
+                "msg" : "Unauthorized"
+            }
+        })
+    }
+    
+}
+
+module.exports.removeText = async (application, request, response) => {
+    try {
+        assert(request.headers.authorization);
+
+        const data = await application.src.models.Textos.removeText(application, request.params);
 
         return response.json({
             "status" : "200",
@@ -103,7 +121,6 @@ module.exports.removeBanner = async (application, request, response) => {
             "err" : {}
         })
     } catch (err) {
-        console.log(err)
         return response.status(401).json({
             "status" : "401",
             "err" : {

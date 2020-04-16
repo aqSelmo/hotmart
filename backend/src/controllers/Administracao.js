@@ -111,7 +111,7 @@ module.exports.updateUser = async (application, request, response) => {
     try {
         assert(request.headers.authorization);
 
-        const data = await application.src.models.Administracao.update(application, {
+        const data = await application.src.models.Administracao.updateUser(application, {
             _id : request.body._id,
             fields : request.body.fields
         });
@@ -139,7 +139,7 @@ module.exports.removeUser = async (application, request, response) => {
     try {
         assert(request.headers.authorization);
 
-        const data = await application.src.models.Administracao.remove(application, request.params);
+        const data = await application.src.models.Administracao.removeUser(application, request.params);
 
         return response.json({
             "status" : "200",
